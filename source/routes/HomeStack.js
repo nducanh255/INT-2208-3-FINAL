@@ -11,7 +11,13 @@ export default function HomeStack() {
   return (
     <NavigationContainer>
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen}/>
+            <Stack.Screen 
+              name="Home" 
+              component={HomeScreen}
+              options={{
+                headerStyle: {backgroundColor: '#61BF1A'}
+              }}
+            />
             <Stack.Screen name="Ducks" component={OddDucksOutScreen}/>
             <Stack.Screen name="Shapes" component={OddShapesOutScreen}/>
         </Stack.Navigator>
