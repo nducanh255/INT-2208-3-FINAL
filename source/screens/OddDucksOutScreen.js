@@ -1,10 +1,47 @@
 import React, { useState, useLayoutEffect } from 'react'
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native'
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { Audio } from 'expo-av'
 import { AntDesign } from '@expo/vector-icons'
 
 export default function DucksScreen({navigation}){
-    const [requestNum, setRequestNum] = useState(Math.floor(Math.random() * 20))
+    const [requestNum, setRequestNum] = useState(Math.floor(Math.random() * 15 + 5))
+    const [isSubmit, setSubmit] = useState(false)
+    const [result, setResult] = useState(false)
+
+    const makeDiff = () => {
+        const a = Math.floor(Math.random() * 20)
+        const b = Math.floor(Math.random() * 20) 
+        if(a > b) 
+            return  {A: a, B: b, eq: a + '-' +  b} 
+        else 
+            return {A: a, B: b, eq: b + '-' +  a}   
+    }
+
+    const makeAnswer = () => {
+        const a = Math.floor(Math.random() * 15)
+        const b = requestNum + a
+        return {A: a, B: b, eq: b + '-' +  a}   
+    }
+
+    const shuffle = (array) => {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+    
+    let diffs = []
+    for(let i = 0; i < 3; i++){
+        diffs.push({...makeDiff(), isCross: false, id: i})
+    }
+    for(let i = 3; i < 5; i++){
+        diffs.push({...makeAnswer(), isCross: false, id: i})
+    }
+    shuffle(diffs)
+
+    const [Diffs, setDiffs] = useState(diffs)
 
     const quack = new Audio.Sound()
     quack.loadAsync(require('../assets/sounds/duck_quack.mp3'), {shouldPlay: false}, false)
@@ -37,7 +74,7 @@ export default function DucksScreen({navigation}){
                 <Text style={styles.requestNum}>{requestNum}</Text>
             </View>
             <FlatList
-                data={[{eq: '1+3=4'}, {eq: '1+3=4'}, {eq: '1+3=4'}, {eq: '1+3=4'}, {eq: '1+3=4'}]}
+                data={Diffs}
                 renderItem ={({item, index}) => (
                     <View style={styles.itemContainer}>
                         <View style={styles.speakingBubble}>
@@ -45,20 +82,39 @@ export default function DucksScreen({navigation}){
                         </View>
                         <View style={styles.triangle}></View>
                         <TouchableOpacity
-                            onPress={() => quack.playAsync()}
+                            onPress={() => {
+                                quack.playAsync()
+                                setDiffs(Diffs.map(element => (
+                                    (item.id === element.id) ?
+                                    {...element, isCross: true} : 
+                                    element
+                                )))
+                                bkgrMusic.pauseAsync()
+                            }}
                         >
                             <Image 
                                 style={styles.duckImg}
                                 source={require('../assets/images/duck_0' + (index+2) +'.jpg')}
                                 resizeMode={'stretch'}
                             />
-                        </TouchableOpacity>
-                        
+                            {item.isCross && <View style={styles.crossLine}></View>}
+                        </TouchableOpacity>   
                     </View>
                 )}
                 horizontal={true}
+                style={{width: '100%'}}
             />
-            <Text>Ducks Screen</Text>
+            <View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        setSubmit(true)
+                        bkgrMusic.stopAsync()
+                    }}
+                >
+                    <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -122,5 +178,28 @@ const styles = StyleSheet.create({
     duckImg: {
         height: 150, 
         width: 150
+    },
+    button: {
+        width: 150,
+        height: 50,
+        borderRadius: 50,
+        backgroundColor: 'green',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 20
+    },
+    crossLine: {
+        position: 'absolute',
+        transform: [ {rotate: '45deg'} ],
+        top: -100,
+        left: 50,
+        width: 200,
+        height: 200,
+        borderBottomColor: 'red',
+        borderBottomWidth: 20,
     }
 })
