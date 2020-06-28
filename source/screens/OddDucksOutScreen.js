@@ -1,14 +1,30 @@
-import React, { useState } from 'react'
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import React, { useState, useLayoutEffect } from 'react'
+import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native'
 import { Audio } from 'expo-av'
+import { AntDesign } from '@expo/vector-icons'
 
-export default function DucksScreen(){
+export default function DucksScreen({navigation}){
     const [requestNum, setRequestNum] = useState(Math.floor(Math.random() * 20))
 
     const quack = new Audio.Sound()
     quack.loadAsync(require('../assets/sounds/duck_quack.mp3'), {shouldPlay: false}, false)
     const bkgrMusic = new Audio.Sound()
     bkgrMusic.loadAsync(require('../assets/sounds/fluffing_duck.mp3'), {shouldPlay: true, isLooping: true}, false)
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack()
+                        bkgrMusic.stopAsync()
+                    }} 
+                >
+                    <AntDesign name='arrowleft' size={25} color={'black'}/>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
     return(
         <View style={styles.container}>
