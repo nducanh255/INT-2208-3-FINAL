@@ -34,10 +34,10 @@ export default function DucksScreen({navigation}){
     
     let diffs = []
     for(let i = 0; i < 3; i++){
-        diffs.push({...makeDiff(), isCross: false, id: i})
+        diffs.push({...makeDiff(), isCross: false, id: i, isAnswer: false})
     }
     for(let i = 3; i < 5; i++){
-        diffs.push({...makeAnswer(), isCross: false, id: i})
+        diffs.push({...makeAnswer(), isCross: false, id: i, isAnswer: true})
     }
     shuffle(diffs)
 
@@ -56,12 +56,13 @@ export default function DucksScreen({navigation}){
                         navigation.goBack()
                         bkgrMusic.stopAsync()
                     }} 
+                    style={{marginHorizontal: 20}}
                 >
                     <AntDesign name='arrowleft' size={25} color={'black'}/>
                 </TouchableOpacity>
             ),
-        });
-    }, [navigation]);
+        })
+    }, [navigation])
 
     return(
         <View style={styles.container}>
@@ -73,6 +74,8 @@ export default function DucksScreen({navigation}){
             <View style={styles.requestContainer}>
                 <Text style={styles.requestNum}>{requestNum}</Text>
             </View>
+            {
+            (!isSubmit) ?
             <FlatList
                 data={Diffs}
                 renderItem ={({item, index}) => (
@@ -81,6 +84,7 @@ export default function DucksScreen({navigation}){
                             <Text style={styles.eq}>{item.eq}</Text>
                         </View>
                         <View style={styles.triangle}></View>
+                        <Text>{result}</Text>
                         <TouchableOpacity
                             onPress={() => {
                                 quack.playAsync()
@@ -103,17 +107,64 @@ export default function DucksScreen({navigation}){
                 )}
                 horizontal={true}
                 style={{width: '100%'}}
+            /> :
+            <FlatList
+                data={Diffs}
+                renderItem ={({item, index}) => (
+                    <View style={styles.itemContainer}>
+                        <View style={styles.speakingBubble}>
+                            <Text style={styles.eq}>{item.eq}</Text>
+                        </View>
+                        <View style={styles.triangle}></View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                quack.playAsync()
+                                setDiffs(Diffs.map(element => (
+                                    (item.id === element.id) ?
+                                    {...element, isCross: true} : 
+                                    element
+                                )))
+                                bkgrMusic.pauseAsync()
+                            }}
+                        >
+                            <View style={item.isAnswer && {borderColor: 'green', borderWidth: 5, padding: -15}}>
+                                <Image 
+                                    style={styles.duckImg}
+                                    source={require('../assets/images/duck_0' + (index+2) +'.jpg')}
+                                    resizeMode={'stretch'}
+                                />
+                                {item.isCross && <View style={styles.crossLine}></View>}
+                            </View>
+                        </TouchableOpacity>   
+                    </View>
+                )}
+                horizontal={true}
+                style={{width: '100%'}}
             />
+            }
             <View>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                        setSubmit(true)
-                        bkgrMusic.stopAsync()
-                    }}
-                >
-                    <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
+                {
+                    (!isSubmit) ?
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                            setSubmit(true)
+                            bkgrMusic.stopAsync()
+                        }}
+                    >
+                        <Text style={styles.buttonText}>Nộp bài</Text>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => {
+                            setSubmit(false)
+                            setDiffs(diffs)
+                            bkgrMusic.stopAsync()
+                        }}
+                    >
+                        <Text style={styles.buttonText}>Tiếp Theo</Text>
+                    </TouchableOpacity>
+                }
             </View>
         </View>
     )

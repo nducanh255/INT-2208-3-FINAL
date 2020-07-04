@@ -18,8 +18,20 @@ export default function HomeStack() {
                 headerStyle: {backgroundColor: '#61BF1A'}
               }}
             />
-            <Stack.Screen name="Ducks" component={OddDucksOutScreen}/>
-            <Stack.Screen name="Shapes" component={OddShapesOutScreen}/>
+            <Stack.Screen 
+              name="Ducks" 
+              component={OddDucksOutScreen}
+              options={{
+                headerStyle: {backgroundColor: '#61BF1A'}
+              }}
+            />
+            <Stack.Screen 
+              name="Shapes" 
+              component={OddShapesOutScreen}
+              options={{
+                headerStyle: {backgroundColor: '#61BF1A'}
+              }}
+            />
         </Stack.Navigator>
     </NavigationContainer>
   )
