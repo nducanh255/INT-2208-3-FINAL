@@ -23,7 +23,9 @@ export default function ShapesScreen({navigation}){
     }
     const [board, setBoard] = useState(initBoard)
 
+    const colors = ['#00239C', '#F93B22','#FFB81C', '#FF6C2F', '#A6192E', '#BF1932']
     const shapes = ['camera', 'heart', 'clock', 'star', 'tag', 'cloud', 'pin', 'smile', 'frown']
+    const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
     const [shape, setShape] = useState(shapes[Math.floor(Math.random() * shapes.length)])
 
     const checkResult = () => {
@@ -42,7 +44,17 @@ export default function ShapesScreen({navigation}){
             setResult('wrong')
             setFinish({...finish, wrong: finish.wrong + 1})
             wrongFX.playAsync()
-        }    
+        } 
+        setSubmit(true)   
+    }
+
+    const reset = () => {
+        setSubmit(false)
+        setRequestNum(Math.floor(Math.random() * 20))
+        setBoard(initBoard)
+        setResult('')
+        setShape(shapes[Math.floor(Math.random() * shapes.length)])
+        setColor(colors[Math.floor(Math.random() * colors.length)])
     }
 
     if(!isComplete)
@@ -64,7 +76,7 @@ export default function ShapesScreen({navigation}){
                                 ))
                             }}
                         >
-                            <Shape shape={shape} isCross={item.isCross}/>
+                            <Shape shape={shape} color={color} isCross={item.isCross}/>
                         </TouchableOpacity>
                     )}
                     numColumns={5}
@@ -73,38 +85,35 @@ export default function ShapesScreen({navigation}){
             <View style={styles.buttonContainer}>
                 {
                     !isSubmit ?
-                    <Button
-                        title={'Nộp bài'}
-                        onPress={() => {
-                            checkResult()
-                            setSubmit(true)
-                        }}
-                    /> :
-                    <Button
-                        title={'Tiếp theo'}
-                        onPress={() => {
-                            setSubmit(false)
-                            setRequestNum(Math.floor(Math.random() * 20))
-                            setBoard(initBoard)
-                            setResult('')
-                            setShape(shapes[Math.floor(Math.random() * shapes.length)])
-                        }}
-                    />
+                    <TouchableOpacity
+                        onPress={() => checkResult()}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>Nộp bài</Text>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        onPress={() => reset()}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>Tiếp theo</Text>
+                    </TouchableOpacity>
                 }
-                <Button
-                    title='Kết thúc'
+                <TouchableOpacity
                     onPress={() => {
                         setComplete(true)
                         streakFX.playAsync()
                     }}
-                />
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Kết thúc</Text>
+                </TouchableOpacity>
             </View>
             {
                 (isSubmit) &&
                 (result === 'correct') ?
-                <Text style={{color: 'green', fontSize: 50}}>Đúng rồi :) !!!</Text> :
+                <Text style={[{color: 'green'}, styles.resultText]}>Đúng rồi :) !!!</Text> :
                 (result === 'wrong') &&
-                <Text style={{color: 'red', fontSize: 50}}>Sai rồi :(</Text> 
+                <Text style={[{color: 'red'}, styles.resultText]}>Sai rồi :(</Text> 
             }
         </View>
     )
@@ -119,12 +128,12 @@ export default function ShapesScreen({navigation}){
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, 
+        //flex: 1, 
         flexDirection: 'column',
         alignItems: 'center'
     }, 
     board: {
-        borderColor: 'black',
+        borderColor: '#004731',
         borderWidth: 5,
         alignSelf: 'center',
         flexWrap: 'wrap'
@@ -136,14 +145,16 @@ const styles = StyleSheet.create({
         height: 75,
         width: 75,
         borderRadius: 75,
-        borderColor: 'black',
+        borderColor: '#FF5800',
         borderWidth: 5,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: 10
     },
     requestNumTitle: {
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#FF5800'
     }, 
     buttonContainer: {
         height: 50,
@@ -151,5 +162,35 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    button: {
+        width: 100,
+        height: 50,
+        borderRadius: 10,
+        backgroundColor: '#004731',
+        marginTop: 20,
+        alignSelf: 'center',
+        // align content to the center
+        justifyContent: 'center',
+        alignItems: 'center',
+        // make shadow
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 4,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+        elevation: 9
+    },
+    buttonText: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    resultText: {
+        fontSize: 40, 
+        fontWeight: 'bold',
+        paddingTop: 20
     }
 })

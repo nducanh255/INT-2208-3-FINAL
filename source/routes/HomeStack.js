@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeScreen from '../screens/HomeScreen'
@@ -15,21 +15,30 @@ export default function HomeStack() {
               name="Home" 
               component={HomeScreen}
               options={{
-                headerStyle: {backgroundColor: '#61BF1A'}
+                title: 'Luyện tập phép tính trừ',
+                headerStyle: {backgroundColor: '#004731'},
+                headerTintColor: 'white',
+                headerTitleAlign: 'center'
               }}
             />
             <Stack.Screen 
               name="Ducks" 
               component={OddDucksOutScreen}
               options={{
-                headerStyle: {backgroundColor: '#61BF1A'}
+                title: 'Gạch những chú vịt sai',
+                headerStyle: {backgroundColor: '#004731'},
+                headerTintColor: 'white',
+                headerTitleAlign: 'center'
               }}
             />
             <Stack.Screen 
               name="Shapes" 
               component={OddShapesOutScreen}
               options={{
-                headerStyle: {backgroundColor: '#61BF1A'}
+                title: 'Gạch bớt theo yêu cầu',
+                headerStyle: {backgroundColor: '#004731'},
+                headerTintColor: 'white',
+                headerTitleAlign: 'center'
               }}
             />
         </Stack.Navigator>

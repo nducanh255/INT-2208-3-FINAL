@@ -58,7 +58,7 @@ export default function DucksScreen({navigation}){
                     }} 
                     style={{marginHorizontal: 20}}
                 >
-                    <AntDesign name='arrowleft' size={25} color={'black'}/>
+                    <AntDesign name='arrowleft' size={25} color={'white'}/>
                 </TouchableOpacity>
             ),
         })
@@ -214,13 +214,16 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 100,
+        borderColor: '#FF5800',
+        borderWidth: 5,
         backgroundColor: 'white',
-        marginVertical: 100, 
+        marginVertical: 60,
         justifyContent: 'center',
         alignItems: 'center'
     },
     requestNum : {
         fontSize: 50,
+        color: '#FF5800',
         fontWeight: 'bold'
     },
     eq: {
@@ -231,12 +234,27 @@ const styles = StyleSheet.create({
         width: 150
     },
     button: {
-        width: 150,
+        width: 100,
         height: 50,
-        borderRadius: 50,
-        backgroundColor: 'green',
+        borderRadius: 10,
+        backgroundColor: '#004731',
+        marginTop: 20,
+        alignSelf: 'center',
+        // align content to the center
         justifyContent: 'center',
         alignItems: 'center',
+        // make shadow
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 4,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+        elevation: 9,
+        // align button to the end
+        position: 'absolute',
+        bottom: 50
     },
     buttonText: {
         color: 'white',
