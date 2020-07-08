@@ -2,8 +2,8 @@
   "homepage": "http://nducanh255.github.io/INT-2208-3-FINAL",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "predeploy": "expo build:web",
+    "deploy": "gh-pages -d web-build",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
